@@ -15,7 +15,9 @@ void Grid::DrawClick(SDL_Renderer *renderer, float x, float y)
 {
   int col = x/(float)(blocks_wide);
   int row = y/(float)(blocks_tall);
-  pixels[(row*blocks_wide) + col] =  1;
+  // 1 is black
+  if (((row*blocks_wide)+col) < blocks_wide*blocks_tall)
+    pixels[(row*blocks_wide) + col] =  1;
 }
 
 void Grid::DrawGrid(SDL_Renderer *renderer)
