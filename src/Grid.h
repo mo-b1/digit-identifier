@@ -11,7 +11,7 @@ public:
   float block_width;
   float block_height;
 
-  std::vector<int> pixels;
+  std::vector<float> pixels;
 
   Grid(int size_x, int size_y,int screen_width, int screen_height);
   void DrawGrid(SDL_Renderer *renderer);

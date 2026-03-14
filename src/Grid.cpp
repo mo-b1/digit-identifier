@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include <iostream>
+#include <math.h>
 #include "Grid.h"
 
 Grid::Grid(int size_x, int size_y, int screen_width, int screen_height) : 
@@ -13,11 +14,17 @@ Grid::Grid(int size_x, int size_y, int screen_width, int screen_height) :
 
 void Grid::DrawClick(SDL_Renderer *renderer, float x, float y)
 {
-  int col = x/(float)(blocks_wide);
-  int row = y/(float)(blocks_tall);
+  //how many blocks across and down is the cursor on
+  int col = x/(float)(block_width);
+  int row = y/(float)(block_height);
+
+  int index = (row*blocks_wide) + col;
+
   // 1 is black
-  if (((row*blocks_wide)+col) < blocks_wide*blocks_tall)
-    pixels[(row*blocks_wide) + col] =  1;
+  if ( index < blocks_wide*blocks_tall)
+    pixels[index] = pixels[index] < 255? pixels[index] + 0.8 : pixels[index];
+
+    
 }
 
 void Grid::DrawGrid(SDL_Renderer *renderer)
@@ -54,6 +61,10 @@ void Grid::ClearGrid()
 
 void Grid::DrawBlack(SDL_Renderer *renderer, int row, int col)
 {
+  int index = (row*blocks_wide) + col;
+  int shade = 255 - pixels[index];
+  SDL_SetRenderDrawColor(renderer, shade, shade , shade, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
+
   SDL_FRect square = {(float)col*block_width, (float)row*block_height,
                       block_width, block_height};
   SDL_RenderFillRect(renderer, &square);
@@ -63,11 +74,9 @@ void Grid::DrawHighlight(SDL_Renderer *renderer)
 {
   float window_x, window_y;
   SDL_GetMouseState(&window_x, &window_y);
-  float render_x, render_y;
-  SDL_RenderCoordinatesFromWindow(renderer, window_x, window_y, &render_x, &render_y);
 
-  float x = ((int)((float)render_x/(float)block_width)) * block_width;
-  float y = ((int)(render_y/block_height)) * block_height;
+  float x = ((int)((float)window_x/(float)block_width)) * block_width;
+  float y = ((int)(window_y/block_height)) * block_height;
 
   SDL_FRect highlight = {x, y, block_width, block_height};
 

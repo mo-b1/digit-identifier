@@ -11,7 +11,7 @@
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
-Grid main_grid(28, 28, screen_w, screen_h);
+Grid main_grid(28*2, 28*2, screen_w, screen_h);
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
